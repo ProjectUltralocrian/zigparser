@@ -53,8 +53,13 @@ pub fn addAuthor(self: *AppBuilder, author: []const u8) *AppBuilder {
     return self;
 }
 
-pub fn addArg(self: *AppBuilder, arg: Arg) !*AppBuilder {
-    try self.args.put(arg.shortName, arg);
+pub fn addArg(self: *AppBuilder, arg: Arg) *AppBuilder {
+    //no point in bubbling up error in case argument could not be added. It is better to terminate in that case.
+    //This also makes chaining these method calls easier.
+    self.args.put(arg.shortName, arg) catch |err| {
+        stderr.print("Could not add argument: {s}\n", .{arg.longName}) catch unreachable;
+        stderr.print("{}\n", .{err}) catch unreachable;
+    };
     return self;
 }
 
