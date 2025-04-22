@@ -59,6 +59,7 @@ pub fn addArg(self: *AppBuilder, arg: Arg) *AppBuilder {
     self.args.put(arg.shortName, arg) catch |err| {
         stderr.print("Could not add argument: {s}\n", .{arg.longName}) catch unreachable;
         stderr.print("{}\n", .{err}) catch unreachable;
+        std.process.exit(1);
     };
     return self;
 }
