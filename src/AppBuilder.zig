@@ -94,7 +94,6 @@ fn parseArgs(self: *const AppBuilder) !ParsedArgs.ParsedArgs {
                         //if flag takes no params, store it with no arguments and proceed to next iteration
                         if (!flag.takesParam) {
                             try parsed_args.flags.put(c, ParsedArgs.Flag{ .arg = self.args.get(c).?, .param = null });
-                            skip_arg = false;
                         }
 
                         //if flag taking a parameter is not followed by a space or =, report error and exit
@@ -106,7 +105,6 @@ fn parseArgs(self: *const AppBuilder) !ParsedArgs.ParsedArgs {
                         //if flag taking a parameter is followed by =
                         else if (arg.len > c_idx + 2 and arg[c_idx + 1] == '=') {
                             try parsed_args.flags.put(c, ParsedArgs.Flag{ .arg = self.args.get(c).?, .param = arg[c_idx + 2 ..] });
-                            skip_arg = false;
 
                             //should not continue iterating short flags
                             break;
@@ -147,7 +145,6 @@ fn parseArgs(self: *const AppBuilder) !ParsedArgs.ParsedArgs {
                         //if flag takes no params, store it with no arguments and proceed to next iteration
                         if (!entry.value_ptr.takesParam) {
                             try parsed_args.flags.put(entry.key_ptr.*, ParsedArgs.Flag{ .arg = entry.value_ptr.*, .param = null });
-                            skip_arg = false;
                             found = true;
                             break;
                         }
@@ -155,7 +152,6 @@ fn parseArgs(self: *const AppBuilder) !ParsedArgs.ParsedArgs {
                         //if flag takes parameter, check and consume next token
                         else if (idx + 1 < std.os.argv.len and std.os.argv[idx + 1][0] != '-') {
                             try parsed_args.flags.put(short_name, ParsedArgs.Flag{ .arg = entry.value_ptr.*, .param = std.mem.span(std.os.argv[idx + 1]) });
-                            skip_arg = true;
                             found = true;
                             break;
                         }
@@ -170,7 +166,6 @@ fn parseArgs(self: *const AppBuilder) !ParsedArgs.ParsedArgs {
                     //If arg is matched and has = in it without spaces
                     else if (arg.len > entry.value_ptr.longName.len + 2 and std.mem.eql(u8, entry.value_ptr.longName, arg[2 .. entry.value_ptr.longName.len + 2]) and arg[entry.value_ptr.longName.len + 2] == '=') {
                         try parsed_args.flags.put(short_name, ParsedArgs.Flag{ .arg = entry.value_ptr.*, .param = arg[entry.value_ptr.longName.len + 3 ..] });
-                        skip_arg = false;
                         found = true;
                         break;
                     }
