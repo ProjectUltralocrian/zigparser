@@ -23,7 +23,9 @@ For the time being it is primarily developed as a learning exercise and for my o
 ## Example
 ```zig
  var default_builder = AppBuilder.defaultBuilder(allocator, "MyGrep");
- var builder = default_builder.addAuthor("Tommy").addNumMandatoryPosArgs(1).addUsage(try std.fmt.allocPrint(allocator, "Usage: {s} <pattern> [options...] [filenames...]", .{std.mem.span(std.os.argv[0])}));
+ var builder = default_builder.addAuthor("Tommy")
+                              .addNumMandatoryPosArgs(1)
+                              .addUsage(try std.fmt.allocPrint(allocator, "Usage: {s} <pattern> [options...] [filenames...]", .{std.mem.span(std.os.argv[0])}));
  _ = try builder.addArg(Arg.make_arg('n', "number", "Add line numbers", false, false));
  _ = try builder.addArg(Arg.make_arg('m', "max-count", "Stop after n lines", true, false));
  var app = try builder.build();
