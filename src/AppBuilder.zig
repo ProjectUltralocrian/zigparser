@@ -153,6 +153,7 @@ fn parseArgs(self: *const AppBuilder) !ParsedArgs.ParsedArgs {
                         else if (idx + 1 < std.os.argv.len and std.os.argv[idx + 1][0] != '-') {
                             try parsed_args.flags.put(short_name, ParsedArgs.Flag{ .arg = entry.value_ptr.*, .param = std.mem.span(std.os.argv[idx + 1]) });
                             found = true;
+                            skip_arg = true;
                             break;
                         }
 
