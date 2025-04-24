@@ -21,6 +21,7 @@ For the time being it is primarily developed as a learning exercise and for my o
 - The files in the src directory can be directly copied into the project source directory. Source files (typically the file that includes the main function) can simply @include("lib.zig"), assign it to a constant (e.g. const CliParser = @include("lib.zig")), and then refer to the relevant structures and methods as CliParser.AppBuilder.defaultBuilder(...).
 
 ## Example
+(See full example in the Examples folder)
 ```zig
 var default_builder = AppBuilder.defaultBuilder(allocator, "MyGrep");
 var builder = default_builder
