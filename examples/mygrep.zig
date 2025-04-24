@@ -32,10 +32,11 @@ pub fn main() !void {
     defer app.deinit();
     defer allocator.free(app.usage);
 
-    const numFilenames = app.parsedArgs.positionalArgs.items.len;
+    const numPosArgs = app.parsedArgs.positionalArgs.items.len;
 
-    if (numFilenames > 0) {
-        for (app.parsedArgs.positionalArgs.items[1..]) |filename| {
+    if (numPosArgs > 1) {
+        const filenames = app.parsedArgs.positionalArgs.items[1..];
+        for (filenames) |filename| {
             var file = std.fs.cwd().openFile(filename.value, .{ .mode = .read_only }) catch |err| {
                 try stderr.print("Could not open file: {s}\n{}\n", .{ filename.value, err });
                 break;
@@ -46,7 +47,6 @@ pub fn main() !void {
             try stdout.writeAll("\n");
         }
     } else {
-        //try stdout.writeAll("STDIN");
         try grep(&stdin, &app);
     }
 
